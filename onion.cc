@@ -46,11 +46,22 @@
 int main(int argc,char** argv)
 {
   // Detect interactive mode (if no arguments) and define UI session
-  //
+  
+  int runNumber = 0;
+  
   G4UIExecutive* ui = 0;
   if ( argc == 1 ) {
     ui = new G4UIExecutive(argc, argv);
   }
+  else
+  {
+    if(argc>1)
+    {
+       if(argc == 2)  runNumber = atol(argv[2]);
+    }
+  }
+
+  CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
 
   // Optionally: choose a different Random engine...
   // G4Random::setTheEngine(new CLHEP::MTwistEngine);
@@ -59,7 +70,7 @@ int main(int argc,char** argv)
   //
 #ifdef G4MULTITHREADED  
   G4MTRunManager* runManager = new G4MTRunManager;
-  runManager->SetNumberOfThreads(7);
+  runManager->SetNumberOfThreads(1);
 #else
   G4RunManager* runManager = new G4RunManager;
 #endif
@@ -75,7 +86,15 @@ int main(int argc,char** argv)
     
   // Set user action classes
   runManager->SetUserInitialization(new ActionInitialization());
+
+  long rand[2];
+  rand[0] = long(runNumber*1000000 + 123456);
+  rand[1] = 123456789;
+  const long* rand1 = rand;
+  CLHEP::HepRandom::setTheSeeds(rand1);
   
+  runManager->Initialize();
+
   // Initialize visualization
   //
   G4VisManager* visManager = new G4VisExecutive;
