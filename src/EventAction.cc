@@ -39,7 +39,7 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
-   for (auto i=1; i<=21; i++)
+   for (auto i=1; i<=20; i++)
    {
      fEdep[i] = 0.;
    }
@@ -61,7 +61,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
   // periodic printing
 
   G4int eventID = event->GetEventID();
-  if ( eventID < 100 || eventID % 100 == 0) {
+  if ( eventID % 10000 == 0) {
     G4cout << ">>> Event: " << eventID  << G4endl;
 //    if ( trajectoryContainer ) {
 //      G4cout << "    " << n_trajectories

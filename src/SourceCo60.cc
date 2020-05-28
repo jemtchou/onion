@@ -36,35 +36,28 @@ SourceCo60::~SourceCo60()
 
 G4ThreeVector SourceCo60::GetPosition()
 {
-/*   z = (2*G4UniformRand()-1)*12.25*mm;
-   G4double r = 10.5*mm;
-   while(true) {
-       x=(2*G4UniformRand()-1)*r;
-       y=(2*G4UniformRand()-1)*r;
-       if(x*x+y*y < r*r) break;
-   }*/ 
+   G4double r2 = G4UniformRand();
+   G4double r = sqrt(r2)*cm;
+   G4double phi = G4UniformRand()*2*CLHEP::pi;
+   G4double cost = G4UniformRand()*2-1;
+   G4double sint = sqrt(1-cost*cost);
   
-  G4ThreeVector position(0., 0., 0.); //x,y,z
-  return position; 
+   G4ThreeVector position(r*sint*cos(phi), r*sint*sin(phi), r*cost); //x,y,z
+   return position; 
 }
 
 
 G4ThreeVector SourceCo60::GetDirection(G4ThreeVector& pos)
 {
    // phi = [0,2pi], theta=[0,pi]
-  // G4double cost = G4UniformRand()*2-1;
-  // G4double cost = G4UniformRand()*0.8-0.94; // 80-160 deg
-  // G4double cost = G4UniformRand()*0.04-1; // 160-180 deg
-  G4double cost = G4UniformRand()*0.684-0.342; // 90+- 20 deg
+  G4double cost = G4UniformRand()*0.348-0.174; // 90+- 10 deg
 
-   G4double sint = sqrt(1-cost*cost);
+  G4double sint = sqrt(1-cost*cost);
 
-//   G4double phi = 2*3.14159*G4UniformRand();
-//   G4double phi = 3.14159*G4UniformRand(); // 0-180
-   G4double phi = G4UniformRand()*0.698-0.349+1.571; // 90 +- 20 deg
-   G4ThreeVector dir(sint*cos(phi), sint*sin(phi), cost);
+  G4double phi = G4UniformRand()*0.349-0.175+1.571; // 90 +- 10 deg
+  G4ThreeVector dir(sint*cos(phi), sint*sin(phi), cost);
 
-   return dir;
+  return dir;
 }
 
 

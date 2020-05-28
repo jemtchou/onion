@@ -27,13 +27,14 @@
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4AccumulableManager.hh"
+#include "G4SystemOfUnits.hh"
 
 #include <iostream>
 
 RunAction::RunAction() : G4UserRunAction()
 { 
   // set printing event number per each 100 events
-  G4RunManager::GetRunManager()->SetPrintProgress(1000);     
+  G4RunManager::GetRunManager()->SetPrintProgress(100000);     
 
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   for(auto i = 1; i<=20; i++)
@@ -67,7 +68,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
 
 void RunAction::EndOfRunAction(const G4Run* run)
 {
- G4int nofEvents = run->GetNumberOfEvent();
+ G4int nofEvents = run->GetNumberOfEvent()*0.082; // geom. eff. 
   if (nofEvents == 0) return;
 
   // Merge accumulables 
@@ -78,6 +79,10 @@ void RunAction::EndOfRunAction(const G4Run* run)
   double edep[21];
   double edep2[21];
   double rms[21];
+  
+  std::ofstream fout;
+  if(IsMaster())
+     fout.open("fout.dat");
 
   for(auto i = 1; i<=20; i++)
   { 
@@ -89,14 +94,32 @@ void RunAction::EndOfRunAction(const G4Run* run)
       edep[i]  = edep[i] + fEdep[k]->GetValue();
       edep2[i] = edep2[i] + fEdep2[k]->GetValue();
     }
-   
-    rms[i] = edep2[i] - edep[i]*edep[i]/nofEvents;
+    G4double edep_t  = fEdep[i]->GetValue();
+    G4double edep2_t = fEdep2[i]->GetValue();
+  
+    G4double rms_t = edep2_t - edep_t*edep_t/nofEvents;
+//    G4double rms_t = edep2_t;
+    if (rms_t > 0.) rms_t = std::sqrt(rms_t); else rms_t = 0.;  
+
+//    edep[i] = edep_t;
+//    rms[i] = rms_t;
+
+    rms[i] = edep2[i];// - edep[i]*edep[i]/nofEvents;
     if (rms[i] > 0.) rms[i] = std::sqrt(rms[i]); else rms[i] = 0.;
     if(IsMaster())
-       G4cout << "Detector " << i << " " << edep[i] << " " << rms[i] << G4endl;
+      {
+         G4cout << "Detector " << i << " " << edep[i]/joule << " " << rms[i]/joule << " " << nofEvents << G4endl;
+
+         fout << "Detector " << i << " " << edep[i] << " " << rms[i] << G4endl;
+      }
     else
        G4cout << "  Local: Detector " << i << " " << edep[i] << " " << rms[i] << G4endl;
   }
+
+  if(IsMaster())
+     fout.close();
+
+
 }
 
 void RunAction::AddEdep(G4int n, G4double edep)

@@ -101,8 +101,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                  fCheckOverlaps); // checking overlaps 
 
   // Shielding
+  // 2.15 - 10
+  // 4.3  - 100
+  // 6.45 - 1000
   G4Sphere* shieldS 
-    = new G4Sphere("shield", 1*cm, 160*mm, 0, 2*CLHEP::pi, 0, CLHEP::pi);
+    = new G4Sphere("shield", 1*cm, 7.45*cm, 0, 2*CLHEP::pi, 0, CLHEP::pi);
 
   G4LogicalVolume* shieldLV
     = new G4LogicalVolume(
@@ -140,13 +143,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   for(i=1; i<=20; i++)
   {
-     auto angle_start = 90.*deg - 5.71/2*deg;
+     auto angle_start = 90.*deg - 5.73/2*deg;
 
      char name[15];
      sprintf(name, "Detector_%d", i);
 
      G4Sphere* detS
-         = new G4Sphere(name, r_inner, r_outer, angle_start, 5.71*deg, angle_start, 5.71*deg);
+         = new G4Sphere(name, r_inner, r_outer, angle_start, 5.73*deg, angle_start, 5.73*deg);
 
       G4LogicalVolume* tempLV = new G4LogicalVolume(detS, Water, name);
 

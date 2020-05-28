@@ -72,7 +72,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
       if(name(0,10)!="Detector_1" && postname(0,10)=="Detector_1")
       {
         G4int pdg = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
-        G4cout << "Enter detector 1 " << pdg << G4endl; 
+//        G4cout << "Enter detector 1 " << pdg << G4endl; 
 
         if(pdg == 22) // for gamma only
         {
@@ -83,9 +83,9 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
            cosx = acos(cosx)*180./CLHEP::pi - 90.;
            cosy = acos(cosy)*180./CLHEP::pi;
            cosz = acos(cosz)*180./CLHEP::pi - 90.;
-           G4cout << energy << "," << cosx << "," << cosy << "," << cosz << G4endl;
+//           G4cout << energy << "," << cosx << "," << cosy << "," << cosz << G4endl;
 
-           fout << energy << "," << cosx << "," << cosy << "," << cosz << std::endl; 
+           fout << energy << ", " << cosx << ", " << cosy << ", " << cosz << std::endl; 
         }
       }
    }

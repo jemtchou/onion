@@ -36,6 +36,8 @@
 #include "nwlPhysicsList.hh"
 #include "G4StepLimiterPhysics.hh"
 
+#include "G4EmLivermorePhysics.hh"
+
 #include "Randomize.hh"
 
 #include "G4VisExecutive.hh"
@@ -57,7 +59,7 @@ int main(int argc,char** argv)
   //
 #ifdef G4MULTITHREADED  
   G4MTRunManager* runManager = new G4MTRunManager;
-  runManager->SetNumberOfThreads(3);
+  runManager->SetNumberOfThreads(7);
 #else
   G4RunManager* runManager = new G4RunManager;
 #endif
@@ -68,6 +70,7 @@ int main(int argc,char** argv)
 
   G4VModularPhysicsList* physicsList = new nwlPhysicsList;
   physicsList->SetVerboseLevel(0);
+  physicsList->ReplacePhysics(new G4EmLivermorePhysics);
   runManager->SetUserInitialization(physicsList);
     
   // Set user action classes
