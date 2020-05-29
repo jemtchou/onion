@@ -18,6 +18,7 @@ do
 #  mv pos.csv pos_%RUN%.csv
   ls -l
   cp fout_0.csv /afs/jinr.ru/user/j/jemtchou/onion/prod/%RUN%.csv
+  cp fout.dat /afs/jinr.ru/user/j/jemtchou/onion/prod/%RUN%.dat
   cp run_%RUN%.out /afs/jinr.ru/user/j/jemtchou/onion/prod/
 EOF
   sed -i "s/%RUN%/$f/g" run_$f.sh

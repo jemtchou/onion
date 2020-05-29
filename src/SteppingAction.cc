@@ -71,10 +71,10 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   if(postvolume)
    {
       G4String postname = postvolume->GetLogicalVolume()->GetName();
-      if(name(0,10)!="Detector_1" && postname(0,10)=="Detector_1")
+      if(name(0,11)!="Detector_1_" && postname(0,11)=="Detector_1_")
       {
         G4int pdg = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
-//        G4cout << "Enter detector 1 " << pdg << G4endl; 
+        G4cout << "Enter detector 1 " << pdg << G4endl; 
 
         if(pdg == 22) // for gamma only
         {
