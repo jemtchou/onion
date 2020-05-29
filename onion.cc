@@ -49,6 +49,9 @@ int main(int argc,char** argv)
   
   int runNumber = 0;
   
+  G4cout << "U " << argc << " " << argv[1] << " " << argv[2] << G4endl;
+ 
+ 
   G4UIExecutive* ui = 0;
   if ( argc == 1 ) {
     ui = new G4UIExecutive(argc, argv);
@@ -57,11 +60,13 @@ int main(int argc,char** argv)
   {
     if(argc>1)
     {
-       if(argc == 2)  runNumber = atol(argv[2]);
+       G4cout << "H " << argv[1] << " " << argv[2] << G4endl;
+  
+       if(argc == 3)  runNumber = atol(argv[2]);
     }
   }
 
-  CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
+  //CLHEP::HepRandom::setTheEngine(new CLHEP::RanecuEngine);
 
   // Optionally: choose a different Random engine...
   // G4Random::setTheEngine(new CLHEP::MTwistEngine);
@@ -87,13 +92,20 @@ int main(int argc,char** argv)
   // Set user action classes
   runManager->SetUserInitialization(new ActionInitialization());
 
-  long rand[2];
-  rand[0] = long(runNumber*1000000 + 123456);
-  rand[1] = 123456789;
-  const long* rand1 = rand;
-  CLHEP::HepRandom::setTheSeeds(rand1);
-  
+  G4cout << "Run Number " << runNumber << G4endl;
+
+  CLHEP::RanluxEngine defaultEngine( 1234567, 4 ); 
+  G4Random::setTheEngine( &defaultEngine ); 
+  G4int seed = G4int(runNumber*1000000 + 123456); 
+  G4Random::setTheSeed( seed ); 
+
   runManager->Initialize();
+  
+//long rand[2];
+//  rand[0] = long(runNumber*1000000 + 123456);
+//  rand[1] = 123456789;
+//  const long* rand1 = rand;
+//  G4Random::setTheSeeds(rand1);
 
   // Initialize visualization
   //

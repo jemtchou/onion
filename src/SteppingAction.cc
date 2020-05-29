@@ -39,6 +39,8 @@ SteppingAction::SteppingAction(EventAction* eventAction)
 {
    G4cout << "THREAD "  << G4Threading::G4GetThreadId() << G4endl;
    G4int id = G4Threading::G4GetThreadId();
+   if(id<0) id = 0;
+ 
    char name[20];
    sprintf(name,"fout_%d.csv",id);
    fout.open(name);
