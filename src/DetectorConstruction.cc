@@ -107,7 +107,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // 9.00  - 10000
   // 11.35 - 100000
   G4Sphere* shieldS 
-    = new G4Sphere("shield", 1*cm, 7.75*cm, 0, 2*CLHEP::pi, 0, CLHEP::pi);
+    = new G4Sphere("shield", 1*cm, 12.35*cm, 0, 2*CLHEP::pi, 0, CLHEP::pi);
 
   G4LogicalVolume* shieldLV
     = new G4LogicalVolume(
