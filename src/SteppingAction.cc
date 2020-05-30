@@ -71,7 +71,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   if(postvolume)
    {
       G4String postname = postvolume->GetLogicalVolume()->GetName();
-      if(name(0,11)!="Detector_1_" && postname(0,11)=="Detector_1_")
+     /* if(name(0,11)!="Detector_1_" && postname(0,11)=="Detector_1_")
       {
         G4int pdg = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
         G4cout << "Enter detector 1 " << pdg << G4endl; 
@@ -87,17 +87,26 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
            cosz = acos(cosz)*180./CLHEP::pi - 90.;
 //           G4cout << energy << "," << cosx << "," << cosy << "," << cosz << G4endl;
 
-           fout << energy << ", " << cosx << ", " << cosy << ", " << cosz << std::endl; 
+     //      fout << energy << ", " << cosx << ", " << cosy << ", " << cosz << std::endl; 
+        }
+      }*/
+     if(name(0,5)=="World" && postname(0,4)=="ICRU")
+      {
+        G4int pdg = step->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
+        if(pdg == 22) // for gamma only
+         { 
+            auto energy = step->GetTrack()->GetKineticEnergy();
+	    fout << energy << std::endl;
         }
       }
    }
 
-  if(name(0,3)!="Det")
+  if(name(0,6)!="Sensor")
      return;
 
   G4int nCopy = step->GetPreStepPoint()->GetTouchableHandle()->GetCopyNumber();
 
-//  G4cout << volume->GetName() << " " << nCopy << G4endl;
+ // G4cout << volume->GetName() << " " << nCopy << G4endl;
       
   // collect energy deposited in this step
   if(nCopy > 0)

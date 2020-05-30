@@ -49,9 +49,6 @@ int main(int argc,char** argv)
   
   int runNumber = 0;
   
-  G4cout << "U " << argc << " " << argv[1] << " " << argv[2] << G4endl;
- 
- 
   G4UIExecutive* ui = 0;
   if ( argc == 1 ) {
     ui = new G4UIExecutive(argc, argv);
@@ -60,8 +57,6 @@ int main(int argc,char** argv)
   {
     if(argc>1)
     {
-       G4cout << "H " << argv[1] << " " << argv[2] << G4endl;
-  
        if(argc == 3)  runNumber = atol(argv[2]);
     }
   }
@@ -75,7 +70,7 @@ int main(int argc,char** argv)
   //
 #ifdef G4MULTITHREADED  
   G4MTRunManager* runManager = new G4MTRunManager;
-  runManager->SetNumberOfThreads(1);
+  runManager->SetNumberOfThreads(7);
 #else
   G4RunManager* runManager = new G4RunManager;
 #endif
@@ -101,12 +96,6 @@ int main(int argc,char** argv)
 
   runManager->Initialize();
   
-//long rand[2];
-//  rand[0] = long(runNumber*1000000 + 123456);
-//  rand[1] = 123456789;
-//  const long* rand1 = rand;
-//  G4Random::setTheSeeds(rand1);
-
   // Initialize visualization
   //
   G4VisManager* visManager = new G4VisExecutive;
@@ -135,11 +124,6 @@ int main(int argc,char** argv)
     delete ui;
   }
 
-  // Job termination
-  // Free the store: user actions, physics_list and detector_description are
-  // owned and deleted by the run manager, so they should not be deleted
-  // in the main() program !
-  //
   delete visManager;
   delete runManager;
 }

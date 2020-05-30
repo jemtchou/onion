@@ -65,7 +65,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4NistManager* nist = G4NistManager::Instance();
   G4Material* Air = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
-  G4Material* Tungsten = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
+//  G4Material* Tungsten = G4NistManager::Instance()->FindOrBuildMaterial("G4_Al");
 
   G4Material* Water = G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER");
 
@@ -114,7 +114,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                  shieldS,   //its solid
                  VND,      //its material
                  "Shield"); //its name
-
+/*
   G4VPhysicalVolume* shieldPV
     = new G4PVPlacement(
                  0,               // no rotation
@@ -125,9 +125,87 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                  false,           // no boolean operations
                  0,               // copy number
                  fCheckOverlaps); // checking overlaps 
-
+*/
   // Detector
- 
+  //     
+  // Phantom
+  //  
+  G4Element* O = nist->FindOrBuildElement("O");
+  G4Element* C = nist->FindOrBuildElement("C");
+  G4Element* H = nist->FindOrBuildElement("H");
+  G4Element* N = nist->FindOrBuildElement("N");
+
+  G4Material* icru = new G4Material("ICRU", 1*g/cm3, 4);
+  icru->AddElement(O, 0.762);
+  icru->AddElement(C, 0.111);
+  icru->AddElement(H, 0.101);
+  icru->AddElement(N, 0.026);
+
+  G4ThreeVector posICRU = G4ThreeVector(0*cm, 100*cm, 0*cm);
+        
+  // ICRU sphere       
+  G4Sphere* sICRU =    
+    new G4Sphere("ICRUsphere", 0., 15.*cm, 0, 360*deg, 0, 180*deg);
+                      
+  G4LogicalVolume* lICRU =                         
+    new G4LogicalVolume(sICRU,         //its solid
+                        icru,          //its material
+                        "ICRUSphere");           //its name
+
+    new G4PVPlacement(0,                       //no rotation
+                    posICRU,                    //at position
+                    lICRU,             //its logical volume
+                    "ICRUSphere",                //its name
+                    worldLV,                //its mother  volume
+                    false,                   //no boolean operation
+                    0,                       //copy number
+                    fCheckOverlaps);          //overlaps checking
+
+  //     
+  // Sensor
+  //
+  G4ThreeVector posThin = G4ThreeVector(1*cm, -14*cm, 0);
+  G4ThreeVector posThick = G4ThreeVector(-1*cm, -14*cm, 0);
+
+  G4Box* sSensor1 =    
+    new G4Box("SensorThin", 0.5*cm, 0.5*0.5*cm, 0.5*cm); 
+                
+  G4LogicalVolume* lSensor1 =                         
+    new G4LogicalVolume(sSensor1, icru, "SensorThin");
+
+  new G4PVPlacement(0,                       //no rotation
+                    posThin,                    //at position
+                    lSensor1,             //its logical volume
+                    "SensorThin",                //its name
+                    lICRU,                //its mother  volume
+                    false,                   //no boolean operation
+                    1,                       //copy number
+                    fCheckOverlaps);          //overlaps checking
+
+  G4Box* sSensor2 =
+    new G4Box("SensorThin", 0.5*cm, 0.5*cm, 0.5*cm);     
+
+  G4LogicalVolume* lSensor2 =   
+    new G4LogicalVolume(sSensor2, icru, "SensorThick");
+
+  new G4PVPlacement(0,                       //no rotation
+                    posThick,                    //at position
+                    lSensor2,             //its logical volume
+                    "SensorThick",                //its name
+                    lICRU,                //its mother  volume
+                    false,                   //no boolean operation
+                    2,                       //copy number
+                    fCheckOverlaps);          //overlaps checking
+
+  G4cout << "Detector " << lSensor1->GetName()  
+         <<  " mass " << lSensor1->GetMass()/kg << " kg " << G4endl;
+
+  G4cout << "Detector " << lSensor2->GetName()             
+         <<  " mass " << lSensor2->GetMass()/kg << " kg " << G4endl;
+
+
+
+/* 
   G4Sphere* detS 
     = new G4Sphere("Container", 100*cm, 120*cm, 0, 2*CLHEP::pi, 0, CLHEP::pi);
 
@@ -165,7 +243,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     r_inner += 1*cm;
     r_outer += 1*cm;
   }
-
+*/
 
   return worldPV;
 }

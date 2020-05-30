@@ -84,26 +84,10 @@ void RunAction::EndOfRunAction(const G4Run* run)
   if(IsMaster())
      fout.open("fout.dat");
 
-  for(auto i = 1; i<=20; i++)
+  for(auto i = 1; i<=2; i++)
   { 
-    edep[i]=0;
-    edep2[i]=0;
-    for(auto k = 1; k<=i; k++) 
-    {
-//    G4cout << "---> " << i << " " << edep[i] << " " << k << " " << fEdep[k]->GetValue() << G4endl;
-      edep[i]  = edep[i] + fEdep[k]->GetValue();
-      edep2[i] = edep2[i] + fEdep2[k]->GetValue();
-    }
-    G4double edep_t  = fEdep[i]->GetValue();
-    G4double edep2_t = fEdep2[i]->GetValue();
-  
-    G4double rms_t = edep2_t - edep_t*edep_t/nofEvents;
-//    G4double rms_t = edep2_t;
-    if (rms_t > 0.) rms_t = std::sqrt(rms_t); else rms_t = 0.;  
-
-//    edep[i] = edep_t;
-//    rms[i] = rms_t;
-
+    edep[i]=fEdep[i]->GetValue();
+    edep2[i]=fEdep[i]->GetValue();
     rms[i] = edep2[i];// - edep[i]*edep[i]/nofEvents;
     if (rms[i] > 0.) rms[i] = std::sqrt(rms[i]); else rms[i] = 0.;
     if(IsMaster())
